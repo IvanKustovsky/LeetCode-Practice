@@ -684,6 +684,15 @@ public class Solution {
         return Math.max(leftHeight, rightHeight) + 1;
     }
 
+    public boolean containsDuplicate(int[] nums) {
+        HashSet<Integer> hs = new HashSet<Integer>();
+        for (int x : nums) {
+            if (!hs.add(x)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 
