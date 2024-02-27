@@ -1,4 +1,6 @@
 import dataStructures.ListNode;
+import dataStructures.TreeNode;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import solutions.Solution;
 
@@ -511,5 +513,182 @@ public class SolutionTest {
 
         // Тест 2: Перевірка для columnTitle = "AB"
         assertEquals(28, solution.titleToNumber("AB"));
+    }
+
+    @Test
+    public void testGetRow() {
+        // Test RowIndex 0
+        List<Integer> result0 = solution.getRow(0);
+        List<Integer> expected0 = List.of(1);
+        Assertions.assertEquals(expected0, result0);
+
+        // Test RowIndex 1
+        List<Integer> result1 = solution.getRow(1);
+        List<Integer> expected1 = List.of(1, 1);
+        Assertions.assertEquals(expected1, result1);
+
+        // Test RowIndex 3
+        List<Integer> result3 = solution.getRow(3);
+        List<Integer> expected3 = List.of(1, 3, 3, 1);
+        Assertions.assertEquals(expected3, result3);
+    }
+
+    @Test
+    public void testInorderTraversal() {
+        TreeNode root1 = new TreeNode(1);
+        root1.left = new TreeNode(3);
+        root1.left.left = new TreeNode(7);
+        root1.left.left.left = new TreeNode(3);
+        root1.left.left.right = new TreeNode(6);
+        root1.right = new TreeNode(5);
+        root1.right.right = new TreeNode(2);
+
+        List<Integer> result1 = solution.inorderTraversal(root1);
+        List<Integer> expected1 = new ArrayList<>();
+        expected1.add(3);
+        expected1.add(7);
+        expected1.add(6);
+        expected1.add(3);
+        expected1.add(1);
+        expected1.add(5);
+        expected1.add(2);
+        assertEquals(expected1, result1);
+
+        TreeNode root2 = new TreeNode(1);
+
+        List<Integer> result2 = solution.inorderTraversal(root2);
+        List<Integer> expected2 = new ArrayList<>();
+        expected2.add(1);
+        assertEquals(expected2, result2);
+
+        TreeNode root3 = new TreeNode(1);
+        root3.right = new TreeNode(2);
+        root3.right.left = new TreeNode(3);
+
+        List<Integer> result3 = solution.inorderTraversal(root3);
+        List<Integer> expected3 = new ArrayList<>();
+        expected3.add(1);
+        expected3.add(3);
+        expected3.add(2);
+        assertEquals(expected3, result3);
+    }
+
+    @Test
+    public void testMaxProfit() {
+        // Тест на вхідний масив 7 1 5 3 6 4
+        int[] prices1 = {7, 1, 5, 3, 6, 4};
+        assertEquals(5, solution.maxProfit(prices1));
+
+        // Тест на вхідний масив 7 6 4 3 1
+        int[] prices2 = {7, 6, 4, 3, 1};
+        assertEquals(0, solution.maxProfit(prices2));
+
+        // Тест на вхідний масив 2 4 1
+        int[] prices3 = {2, 4, 1};
+        assertEquals(2, solution.maxProfit(prices3));
+
+        // Тест на вхідний масив 3 2 6 5 0 3
+        int[] prices4 = {3, 2, 6, 5, 0, 3};
+        assertEquals(4, solution.maxProfit(prices4));
+    }
+
+    @Test
+    public void testAddTwoNumbers() {
+        Solution solution = new Solution();
+
+        // Test Case 1
+        ListNode l1 = new ListNode(2);
+        l1.next = new ListNode(4);
+        l1.next.next = new ListNode(3);
+
+        ListNode l2 = new ListNode(5);
+        l2.next = new ListNode(6);
+        l2.next.next = new ListNode(4);
+
+        ListNode expected = new ListNode(7);
+        expected.next = new ListNode(0);
+        expected.next.next = new ListNode(8);
+
+        ListNode result = solution.addTwoNumbers(l1, l2);
+        assertTrue(compareLinkedLists(expected, result));
+
+        // Test Case 2
+        l1 = new ListNode(0);
+        l2 = new ListNode(0);
+        expected = new ListNode(0);
+
+        result = solution.addTwoNumbers(l1, l2);
+        assertTrue(compareLinkedLists(expected, result));
+
+        // Test Case 3
+        l1 = new ListNode(9);
+        l1.next = new ListNode(9);
+        l1.next.next = new ListNode(9);
+        l1.next.next.next = new ListNode(9);
+        l1.next.next.next.next = new ListNode(9);
+        l1.next.next.next.next.next = new ListNode(9);
+        l1.next.next.next.next.next.next = new ListNode(9);
+
+        l2 = new ListNode(9);
+        l2.next = new ListNode(9);
+        l2.next.next = new ListNode(9);
+        l2.next.next.next = new ListNode(9);
+
+        expected = new ListNode(8);
+        expected.next = new ListNode(9);
+        expected.next.next = new ListNode(9);
+        expected.next.next.next = new ListNode(9);
+        expected.next.next.next.next = new ListNode(0);
+        expected.next.next.next.next.next = new ListNode(0);
+        expected.next.next.next.next.next.next = new ListNode(0);
+        expected.next.next.next.next.next.next.next = new ListNode(1);
+
+        result = solution.addTwoNumbers(l1, l2);
+        assertTrue(compareLinkedLists(expected, result));
+    }
+
+    // Helper function to compare linked lists
+    private boolean compareLinkedLists(ListNode l1, ListNode l2) {
+        while (l1 != null && l2 != null) {
+            if (l1.val != l2.val)
+                return false;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        return l1 == null && l2 == null;
+    }
+
+    @Test
+    public void testIsPowerOfTwo() {
+        // Перевірка на правильність для кількох позитивних значень, що є степенями двійки
+        assertTrue(solution.isPowerOfTwo(1));
+        assertTrue(solution.isPowerOfTwo(2));
+        assertTrue(solution.isPowerOfTwo(4));
+        assertTrue(solution.isPowerOfTwo(8));
+        assertTrue(solution.isPowerOfTwo(16));
+
+        // Перевірка на відсутність степенів двійки
+        assertFalse(solution.isPowerOfTwo(0));
+        assertFalse(solution.isPowerOfTwo(3));
+        assertFalse(solution.isPowerOfTwo(5));
+        assertFalse(solution.isPowerOfTwo(10));
+    }
+
+    @Test
+    public void testDiameterOfBinaryTree() {
+        // Створення дерева для тестування
+        //      1
+        //     / \
+        //    2   3
+        //   / \
+        //  4   5
+        TreeNode root = new TreeNode(1);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(3);
+        root.left.left = new TreeNode(4);
+        root.left.right = new TreeNode(5);
+
+        // Очікуваний результат: діаметр дерева - 3 (шлях 4-2-1-3-5)
+        assertEquals(3, solution.diameterOfBinaryTree(root));
     }
 }

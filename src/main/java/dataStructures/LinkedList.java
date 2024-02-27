@@ -1,5 +1,7 @@
 package dataStructures;
 
+import java.util.Objects;
+
 public class LinkedList { // SinglyLinkedList
     private ListNode head;
 
@@ -21,7 +23,31 @@ public class LinkedList { // SinglyLinkedList
             }
             head = previous;
         }
+    }
 
+    public void add(int index, ListNode element) {
+        Objects.checkIndex(index, size() + 1);
+        if(index == 0) {
+            element.next = head;
+            head = element;
+            return;
+        }
+        ListNode pointer = head;
+        for (int i = 0; i < index - 1; i++) {
+            pointer = pointer.next;
+        }
+        element.next = pointer.next;
+        pointer.next = element;
+    }
+
+    public int size(){
+        int size = 0;
+        ListNode pointer = head;
+        while (pointer != null) {
+            pointer = pointer.next;
+            size++;
+        }
+        return size;
     }
 
     public void printListNode() {

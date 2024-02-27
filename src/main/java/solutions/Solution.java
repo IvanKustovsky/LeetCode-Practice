@@ -1,6 +1,7 @@
 package solutions;
 
 import dataStructures.ListNode;
+import dataStructures.TreeNode;
 
 
 import java.util.*;
@@ -43,7 +44,7 @@ public class Solution {
     // Перетворення з десяткової си-ми числення в римську - моє рішення
     public String intToRoman(int num) {
         List<String> letters = Arrays.asList("I", "V", "X", "L", "C", "D", "M", "IV", "IX", "XL", "XC", "CD", "CM");
-        List<Integer> values = Arrays.asList( 1,   5,   10,  50, 100, 500, 1000, 4,    9,    40,   90,   400,  900);
+        List<Integer> values = Arrays.asList(1, 5, 10, 50, 100, 500, 1000, 4, 9, 40, 90, 400, 900);
         if (values.contains(num)) {
             return letters.get(values.indexOf(num));
         }
@@ -241,7 +242,7 @@ public class Solution {
     }
 
     public int mySqrt(int x) {
-        double eps = 0.001, n0 = x / 2. , ni = (n0 + x / n0) / 2;
+        double eps = 0.001, n0 = x / 2., ni = (n0 + x / n0) / 2;
         while (Math.abs(ni - n0) >= eps) {
             n0 = ni;
             ni = (n0 + x / n0) / 2;
@@ -265,26 +266,23 @@ public class Solution {
     }
 
     public List<List<Integer>> generatePascalTriangle(int numRows) {
-        List<List<Integer>> list = new ArrayList<>();
-        List<Integer> currentList;
-        int counter, index;
-        for (int i = numRows; i > 0; i--) {
-            index = 0;
-            counter = numRows - i + 1;
-            currentList = new ArrayList<>();
-            while (counter > 0) {
-                if(index == 0 || index == numRows - i){
-                    currentList.add(1);
+        List<List<Integer>> pascalTriangle = new ArrayList<>();
+        List<Integer> currentRow;
+        for (int i = 0; i < numRows; i++) {
+            currentRow = new ArrayList<>();
+            for (int j = 0; j <= i; j++) {
+                if (j == 0 || j == i) {
+                    currentRow.add(1);
                 } else {
-                    currentList.add(list.get(list.size() - 1).get(counter - 2) +
-                            list.get(list.size() - 1).get(counter - 1));
+                    List<Integer> prevRow = pascalTriangle.get(i - 1);
+                    int value = prevRow.get(j - 1) + prevRow.get(j);
+                    currentRow.add(value);
                 }
-                index++;
-                counter--;
+
             }
-            list.add(currentList);
+            pascalTriangle.add(currentRow);
         }
-        return list;
+        return pascalTriangle;
     }
 
     /*public int majorityElement(int[] nums) { // Level - Easy
@@ -307,7 +305,7 @@ public class Solution {
     public int majorityElement(int[] nums) {   // Better option
         Arrays.sort(nums);
         int n = nums.length;
-        return nums[n/2];
+        return nums[n / 2];
     }
 
     /*public String addBinary(String a, String b) {  // my initial solution ??
@@ -523,6 +521,168 @@ public class Solution {
         return result;
     }
 
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int p1 = m - 1;
+        int p2 = n - 1;
+        int k = m + n - 1;
+        while (p2 >= 0) {
+
+            //          0 1 2 3 4 5
+            // nums1 = [1,2,3,0,0,0], nums2 = [2,5,6], p1=2, p2=2, k=5
+            if (p1 >= 0 && nums1[p1] > nums2[p2]) {
+
+                //Iteration3:  3 > 2  p1=2, p2=0, k=3  nums1[3] = nums1[2]
+                //[1,2,3,0,5,6] => [1,2,3,3,5,6]
+
+                nums1[k--] = nums1[p1--];
+
+            } else {
+
+                //Iteration1: 3 < 6,    p1=2, p2=2, k=5
+                //nums1 = [1,2,3,0,0,0] => [1,2,3,0,0,6]
+
+                //Iteration2: 3 < 5     p1=2, p2=1, k=4
+                // [1,2,3,0,0,6] => [1,2,3,0,5,6]
+
+                //Iteration4:  2 < 2  p1=1, p2=0, k=2
+                //[1,2,3,3,5,6]    =>    [1,2,2,3,5,6]
+                nums1[k--] = nums2[p2--];
+            }
+        }
+    }
+
+    // Get a row from Pascal triangle rowIndex = 3 -> [1,3,3,1]
+    public List<Integer> getRow(int rowIndex) {
+        List<List<Integer>> pascalTriangle = new ArrayList<>();
+        List<Integer> currentRow;
+        for (int i = 0; i <= rowIndex; i++) {
+            currentRow = new ArrayList<>();
+            for (int j = 0; j <= i; j++) {
+                if (j == 0 || j == i) {
+                    currentRow.add(1);
+                } else {
+                    List<Integer> prevRow = pascalTriangle.get(i - 1);
+                    int value = prevRow.get(j - 1) + prevRow.get(j);
+                    currentRow.add(value);
+                }
+
+            }
+            pascalTriangle.add(currentRow);
+        }
+        return pascalTriangle.get(rowIndex);
+    }
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> output = new ArrayList<>();
+        helper(root, output);
+        return output;
+    }
+
+    public void helper(TreeNode root, List<Integer> result) {
+        if (root != null) {
+            helper(root.left, result);
+            result.add(root.val);
+            helper(root.right, result);
+        }
+    }
+
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p == null && q == null) {
+            return true;
+        }
+        if (p == null || q == null) {
+            return false;
+        }
+        if (p.val != q.val) {
+            return false;
+        }
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
+
+    public int maxDepth(TreeNode root) {
+        if(root == null) {
+            return 0;
+        }
+        int maxDepthCount = 1;
+        maxDepthCount += Math.max(maxDepth(root.left), maxDepth(root.right));
+        return maxDepthCount;
+    }
+
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return CreateBST(nums, 0, nums.length - 1);
+    }
+
+    private TreeNode CreateBST(int[] nums, int l, int r) {
+        if (l > r) { // Base Condition or Recursion Stopping Condition
+            return null;
+        }
+        int mid = l + (r - l) / 2;
+        TreeNode root = new TreeNode(nums[mid]); // mid value or median
+        root.left = CreateBST(nums, l, mid - 1); // assign the value for left of subtree that is l to mid -1 for given
+        // array
+        root.right = CreateBST(nums, mid + 1, r); // assign the value for right go subtree that is mid+1 to r for given
+        // array
+        return root;
+    }
+
+    public int maxProfit(int[] prices) { // 7 1 5 3 6 4 //todo
+        int max = 0, length = prices.length;
+        int[] restOfArray = new int[length];
+        for (int i = 0; i < length; i++) {
+            System.arraycopy(prices, i + 1, restOfArray, i + 1, length - i - 1);
+            Arrays.sort(restOfArray);
+            max = Math.max(max, restOfArray[length - 1] - prices[i]);
+        }
+        return max;
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if(l1 == null && l2 == null){
+            return null;
+        }
+        if(l1 == null){
+            return l2;
+        }
+        if(l2 == null){
+            l2 = new ListNode(0);
+        }
+        ListNode result = new ListNode((l1.val + l2.val) % 10);
+        int carry = (l1.val + l2.val) / 10;
+        if(l1.next == null){
+            l1.next = new ListNode(carry);
+        } else {
+            l1.next.val = (l1.next.val + carry);
+        }
+        result.next = (l1.next.val == 0 && l2.next == null && l1.next.next == null) ? null : addTwoNumbers(l1.next, l2.next);
+        return result;
+    }
+
+    public boolean isPowerOfTwo(int n) {
+        // return (n > 0) && Integer.bitCount(n) == 1;
+        for (int i = 0; i < 31; i++) {
+            int ans = (int) Math.pow(2, i);
+            if (ans == n) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int diameterOfBinaryTree(TreeNode root) {
+        int[] diameter = new int[1];
+        helper(root, diameter);
+        return diameter[0];
+    }
+
+    private int helper(TreeNode node, int[] diameter) {
+        if (node == null) {
+            return 0;
+        }
+        int leftHeight = helper(node.left, diameter);
+        int rightHeight = helper(node.right, diameter);
+        diameter[0] = Math.max(diameter[0], leftHeight + rightHeight);
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
 
 }
 
