@@ -691,4 +691,68 @@ public class SolutionTest {
         // Очікуваний результат: діаметр дерева - 3 (шлях 4-2-1-3-5)
         assertEquals(3, solution.diameterOfBinaryTree(root));
     }
+
+    @Test
+    public void testContainsDuplicate() {
+        // Test with array containing duplicates
+        int[] nums1 = {1, 2, 3, 1};
+        assertTrue(solution.containsDuplicate(nums1));
+
+        // Test with array containing no duplicates
+        int[] nums2 = {1, 2, 3, 4};
+        assertFalse(solution.containsDuplicate(nums2));
+    }
+
+    @Test
+    public void testHasPathSum() {
+        // Create a sample binary tree
+        TreeNode root = new TreeNode(5);
+        root.left = new TreeNode(4);
+        root.right = new TreeNode(8);
+        root.left.left = new TreeNode(11);
+        root.left.left.left = new TreeNode(7);
+        root.left.left.right = new TreeNode(2);
+        root.right.left = new TreeNode(13);
+        root.right.right = new TreeNode(4);
+        root.right.right.right = new TreeNode(1);
+
+        // Test with a valid path sum
+        assertTrue(solution.hasPathSum(root, 22));
+
+        // Test with an invalid path sum
+        assertFalse(solution.hasPathSum(root, 23));
+    }
+
+    // Test for minDepth method
+    @Test
+    public void testMinDepth() {
+        // Create a sample binary tree
+        TreeNode root = new TreeNode(3);
+        root.left = new TreeNode(9);
+        root.right = new TreeNode(20);
+        root.right.left = new TreeNode(15);
+        root.right.right = new TreeNode(7);
+
+        // Test with a tree of depth 2
+        assertEquals(2, solution.minDepth(root));
+
+        // Test with a tree of depth 3
+        TreeNode deeperRoot = new TreeNode(1);
+        deeperRoot.left = new TreeNode(2);
+        deeperRoot.left.left = new TreeNode(3);
+        assertEquals(3, solution.minDepth(deeperRoot));
+    }
+
+    @Test
+    public void testIsValidPalindrome(){
+        String str1 = "race a car";
+        String str2 = " ";
+        String str3 = "A man, a plan, a canal: Panama";
+        String str4 = "7P";
+
+        assertFalse(solution.isPalindrome(str1));
+        assertTrue(solution.isPalindrome(str2));
+        assertTrue(solution.isPalindrome(str3));
+        assertFalse(solution.isPalindrome(str4));
+    }
 }

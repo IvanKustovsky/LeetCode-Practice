@@ -5,6 +5,7 @@ import dataStructures.TreeNode;
 
 
 import java.util.*;
+import java.util.stream.Stream;
 
 
 public class Solution {
@@ -600,7 +601,7 @@ public class Solution {
     }
 
     public int maxDepth(TreeNode root) {
-        if(root == null) {
+        if (root == null) {
             return 0;
         }
         int maxDepthCount = 1;
@@ -637,18 +638,18 @@ public class Solution {
     }
 
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        if(l1 == null && l2 == null){
+        if (l1 == null && l2 == null) {
             return null;
         }
-        if(l1 == null){
+        if (l1 == null) {
             return l2;
         }
-        if(l2 == null){
+        if (l2 == null) {
             l2 = new ListNode(0);
         }
         ListNode result = new ListNode((l1.val + l2.val) % 10);
         int carry = (l1.val + l2.val) / 10;
-        if(l1.next == null){
+        if (l1.next == null) {
             l1.next = new ListNode(carry);
         } else {
             l1.next.val = (l1.next.val + carry);
@@ -685,7 +686,7 @@ public class Solution {
     }
 
     public boolean containsDuplicate(int[] nums) {
-        HashSet<Integer> hs = new HashSet<Integer>();
+        HashSet<Integer> hs = new HashSet<>();
         for (int x : nums) {
             if (!hs.add(x)) {
                 return true;
@@ -693,6 +694,81 @@ public class Solution {
         }
         return false;
     }
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if (root == null) {
+            return false;
+        }
+        if (root.val - targetSum == 0 && root.left == null && root.right == null) {
+            return true;
+        }
+        return hasPathSum(root.left, targetSum - root.val)
+                || hasPathSum(root.right, targetSum - root.val);
+    }
+
+    public int minDepth(TreeNode root) { // my solution
+        if (root == null) {
+            return 0;
+        }
+        if (root.left == null) {
+            return minDepth(root.right) + 1;
+        }
+        if(root.right == null) {
+            return minDepth(root.left) + 1;
+        }
+            return Math.min(minDepth(root.left), minDepth(root.right)) + 1;
+    }
+
+    public int minDepthWithDeque(TreeNode root) { // better solution
+        if(root == null) return 0;
+        int depth = 1;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            for(int i = 0; i < size; i++){
+                TreeNode node = queue.poll();
+                if(node.left == null && node.right == null){
+                    return depth;
+                }
+                if(node.left != null){
+                    queue.offer(node.left);
+                }
+                if(node.right != null){
+                    queue.offer(node.right);
+                }
+
+            }
+            depth++;
+        }
+        return depth;
+    }
+
+    public boolean isPalindrome(String s) {
+        int leftPointer = 0;
+        int rightPointer = s.length() - 1;
+        s = s.toLowerCase();
+        char charAtLeft, charAtRight;
+        while (leftPointer < rightPointer) {
+            charAtLeft = s.charAt(leftPointer);
+            charAtRight = s.charAt(rightPointer);
+            if(!((charAtLeft >= 'a' && charAtLeft <= 'z') || (charAtLeft >= '0' && charAtLeft <= '9'))) {
+                leftPointer++;
+                continue;
+            }
+            if(!((charAtRight >= 'a' && charAtRight <= 'z') || (charAtRight >= '0' && charAtRight <= '9'))) {
+                rightPointer--;
+                continue;
+            }
+            if(charAtLeft != charAtRight){
+                return false;
+            }
+            leftPointer++;
+            rightPointer--;
+        }
+        return true;
+    }
 }
+
 
 
